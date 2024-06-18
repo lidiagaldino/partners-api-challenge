@@ -1,0 +1,51 @@
+# @name createEvent
+POST http://localhost:3000/events
+Content-Type: application/json
+
+{
+  "name": "New event",
+  "description": "description",
+  "date": "2017-01-01T02:00:00.000z",
+  "price": 100
+}
+
+###
+
+@eventId = {{ createEvent.response.body.id }}
+
+###
+GET http://localhost:3000/events
+###
+GET http://localhost:3000/events/{{ eventId }}
+###
+DELETE http://localhost:3000/events/{{ eventId }}
+###
+PATCH http://localhost:3000/events/{{ eventId }}
+Content-Type: application/json
+
+{
+  "name": "New event update"
+}
+
+###
+# @name createSpot
+POST http://localhost:3000/events/{{ eventId }}/spots
+Content-Type: application/json
+
+{
+  "name": "A1"
+}
+
+###
+@spotName = {{ createSpot.response.body.name }}
+
+###
+POST http://localhost:3000/events/{{eventId}}/reserve
+Content-Type: application/json
+X-Api-Token: 123
+
+{
+  "spots": ["{{ spotName }}"],
+  "ticket_kind": "full",
+  "email": "test@test.com"
+}
