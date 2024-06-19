@@ -1,0 +1,40 @@
+## Deve listar vazio
+GET http://localhost:3000/events 
+### Deve criar um event
+# @name createEvent 
+POST http://localhost:3000/events 
+Content-Type: application/json 
+
+{ 
+  "name": "New Event", 
+  "description": "This is a new event", 
+  "date": "2017-01-01T00:00:00", 
+  "price": 100 
+} 
+### 
+@eventId = {{ createEvent.response.body.id }} 
+### Deve retornar 422 
+POST http://localhost:3000/events 
+Content-Type: application/json 
+
+{ } 
+
+### 
+# @name createSpot 
+POST http://localhost:3000/events/{{eventId}}/spots 
+Content-Type: application/json 
+
+{ "name": "A2" } 
+### 
+@spotName = {{ createSpot.response.body.name }}
+### Deve retornar 422 
+POST http://localhost:3000/events/{{eventId}}/spots 
+Content-Type: application/json 
+
+{ } 
+### Deve gerar uma reserva. Se enviado novamente, precisa retornar um erro 
+POST http://localhost:3000/events/{{eventId}}/reserve 
+Content-Type: application/json
+X-Api-Token: 1234 
+
+{ "spots": ["{{ spotName }}"], "ticket_kind": "full", "email": "test@test.com" }
