@@ -1,7 +1,8 @@
 import { TicketKind } from '@prisma/client';
 import {
-  ArrayContains,
+  ArrayMinSize,
   ArrayNotEmpty,
+  IsArray,
   IsEmail,
   IsIn,
   IsString,
@@ -9,6 +10,9 @@ import {
 
 export class ReserveSpotRequest {
   @ArrayNotEmpty()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
   spots: string[];
   @IsString()
   @IsIn(['half', 'full'])
