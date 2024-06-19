@@ -13,7 +13,9 @@ import { Prisma, SpotStatus, TicketKind, TicketStatus } from '@prisma/client';
 export class EventsService {
   constructor(private prismaService: PrismaService) {}
   create(createEventDto: CreateEventDto) {
-    return this.prismaService.event.create({ data: createEventDto });
+    return this.prismaService.event.create({
+      data: { ...createEventDto, date: new Date(createEventDto.date) },
+    });
   }
 
   findAll() {
@@ -27,7 +29,7 @@ export class EventsService {
   update(id: string, updateEventDto: UpdateEventDto) {
     return this.prismaService.event.update({
       where: { id },
-      data: updateEventDto,
+      data: { ...updateEventDto, date: new Date(updateEventDto.date) },
     });
   }
 
